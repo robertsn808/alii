@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: alii-fish-market-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: alii_fish_market
+      POSTGRES_USER: alii_user
+      POSTGRES_PASSWORD: alii_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - alii-network
+
+  # Redis for caching
+  redis:
+    image: redis:7-alpine
+    container_name: alii-fish-market-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - alii-network
+
+  # Mock UPP Service
+  upp-service:
+    image: nginx:alpine
+    container_name: alii-upp-mock
+    restart: unless-stopped
+    volumes:
+      - ./upp-mock/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "3001:80"
+    networks:
+      - alii-network
+
+  # Next.js Frontend (dev mode)
+  frontend:
+    image: node:18-alpine
+    container_name: alii-fish-market-frontend-dev
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8080/api
+      - NEXT_PUBLIC_UPP_API_URL=http://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - upp-service
+    networks:
+      - alii-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  alii-network:
+    driver: bridge

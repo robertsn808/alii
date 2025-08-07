@@ -1,0 +1,97 @@
+# Render.com Blueprint for Alii Fish Market UPP Prototype
+# Deploy to: aliifishmarket.realconnect.online
+
+services:
+  # Frontend - React/Next.js Application
+  - type: web
+    name: alii-frontend
+    runtime: node
+    plan: free
+    buildCommand: cd frontend && npm ci && npm run build
+    startCommand: cd frontend && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        value: https://alii-api.realconnect.online
+      - key: NEXT_PUBLIC_UPP_API_URL
+        value: https://upp.realconnect.online
+      - key: NEXT_PUBLIC_SELLER_API_URL
+        value: https://realconnect.online
+      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_SITE_URL
+        value: https://aliifishmarket.realconnect.online
+    domains:
+      - aliifishmarket.realconnect.online
+    
+  # Backend API - Java Spring Boot
+  - type: web
+    name: alii-api
+    runtime: java
+    plan: free
+    buildCommand: cd backend && ./mvnw clean package -DskipTests
+    startCommand: cd backend && java -jar target/alii-fish-market-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      - key: SERVER_PORT
+        value: 10000
+      - key: DATABASE_URL
+        sync: false
+      - key: UPP_API_ENDPOINT
+        value: https://upp.realconnect.online
+      - key: UPP_MERCHANT_ID
+        value: alii_fish_market_001
+      - key: UPP_API_KEY
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: TWILIO_ACCOUNT_SID
+        sync: false
+      - key: TWILIO_AUTH_TOKEN
+        sync: false
+      - key: TWILIO_PHONE_NUMBER
+        value: +18085551234
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://aliifishmarket.realconnect.online,https://realconnect.online
+    domains:
+      - alii-api.realconnect.online
+
+  # PostgreSQL Database
+  - type: pserv
+    name: alii-database
+    plan: free
+    region: oregon
+    property: postgresql
+    ipAllowList: []
+    envVars:
+      - key: POSTGRES_DB
+        value: alii_fish_market
+      - key: POSTGRES_USER
+        value: alii_user
+
+# Static Assets (if needed)
+staticSites:
+  - name: alii-assets
+    buildCommand: echo "Static assets ready"
+    publishPath: frontend/public
+    domains:
+      - assets.aliifishmarket.realconnect.online
+
+# Environment Groups for shared configuration
+envGroups:
+  - name: alii-shared
+    envVars:
+      - key: APP_NAME
+        value: "Alii Fish Market"
+      - key: APP_VERSION
+        value: "1.0.0"
+      - key: DEPLOYMENT_ENV
+        value: production
+      - key: TIME_ZONE
+        value: "Pacific/Honolulu"
+      - key: BUSINESS_PHONE
+        value: "+1-808-555-FISH"
+      - key: BUSINESS_ADDRESS
+        value: "123 Aloha Way, Honolulu, HI 96813"

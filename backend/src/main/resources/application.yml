@@ -1,0 +1,124 @@
+spring:
+  application:
+    name: alii-fish-market-backend
+  
+  # Database configuration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/alii_fish_market}
+    username: ${DB_USERNAME:alii_user}
+    password: ${DB_PASSWORD:alii_password}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  # JPA configuration  
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+  # Security configuration
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:}
+
+  # Mail configuration (for notifications)
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# Application specific configuration
+app:
+  # OpenAI configuration (from Seller repo)
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model: gpt-3.5-turbo
+    max-tokens: 1000
+    temperature: 0.7
+  
+  # UPP Integration
+  upp:
+    api-url: ${UPP_API_URL:http://localhost:3001}
+    api-key: ${UPP_API_KEY:}
+    webhook-secret: ${UPP_WEBHOOK_SECRET:}
+  
+  # Twilio for SMS notifications
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID:}
+    auth-token: ${TWILIO_AUTH_TOKEN:}
+    phone-number: ${TWILIO_PHONE_NUMBER:}
+  
+  # Business configuration
+  business:
+    name: "Ali'i Fish Market"
+    phone: "(808) 123-FISH"
+    address: "123 Aloha Street, Honolulu, HI 96813"
+    email: "orders@aliifishmarket.com"
+    timezone: "Pacific/Honolulu"
+    operating-hours:
+      open: "06:00"
+      close: "20:00"
+  
+  # Order configuration
+  order:
+    preparation-time-minutes: 15
+    max-advance-order-days: 7
+    tax-rate: 0.04712  # Hawaii general excise tax
+    service-fee-rate: 0.025  # 2.5% service fee
+
+# Server configuration  
+server:
+  port: ${PORT:8080}
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+
+# Logging configuration
+logging:
+  level:
+    com.aliifishmarket: INFO
+    org.springframework.security: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/alii-fish-market.log
+
+# Management endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,env
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: always
+  health:
+    db:
+      enabled: true
+    mail:
+      enabled: true

@@ -1,0 +1,142 @@
+# Production configuration for Alii Fish Market
+# Deploy to: alii-api.realconnect.online
+
+spring:
+  application:
+    name: alii-fish-market-backend
+  
+  # Production Database configuration (Render PostgreSQL)
+  datasource:
+    url: ${DATABASE_URL}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 60000
+
+  # JPA configuration optimized for production
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate  # Use validate in production
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        use_sql_comments: false
+        generate_statistics: false
+        jdbc:
+          batch_size: 20
+          order_inserts: true
+          order_updates: true
+
+# Application specific configuration for production
+app:
+  # UPP Integration (connect to your existing UPP service)
+  upp:
+    api-url: ${UPP_API_ENDPOINT:https://upp.realconnect.online}
+    api-key: ${UPP_API_KEY}
+    webhook-secret: ${UPP_WEBHOOK_SECRET}
+    merchant-id: ${UPP_MERCHANT_ID:alii_fish_market_001}
+  
+  # Seller Integration (connect to your existing seller service)
+  seller:
+    api-url: ${SELLER_API_ENDPOINT:https://realconnect.online}
+    api-key: ${SELLER_API_KEY}
+  
+  # Twilio for SMS notifications
+  twilio:
+    account-sid: ${TWILIO_ACCOUNT_SID}
+    auth-token: ${TWILIO_AUTH_TOKEN}
+    phone-number: ${TWILIO_PHONE_NUMBER}
+  
+  # Stripe for payment processing
+  stripe:
+    secret-key: ${STRIPE_SECRET_KEY}
+    webhook-secret: ${STRIPE_WEBHOOK_SECRET}
+  
+  # Business configuration for production
+  business:
+    name: "Alii Fish Market"
+    phone: ${BUSINESS_PHONE:(808) 555-FISH}
+    address: ${BUSINESS_ADDRESS:123 Aloha Way, Honolulu, HI 96813}
+    email: ${BUSINESS_EMAIL:orders@aliifishmarket.com}
+    timezone: ${TIME_ZONE:Pacific/Honolulu}
+    website: https://aliifishmarket.realconnect.online
+    operating-hours:
+      open: "06:00"
+      close: "20:00"
+    
+  # Order configuration optimized for production
+  order:
+    preparation-time-minutes: 15
+    max-advance-order-days: 7
+    tax-rate: 0.04712  # Hawaii general excise tax
+    service-fee-rate: 0.025  # 2.5% UPP service fee (vs 5.99% Toast fees)
+  
+  # Demo configuration for prototype showcase
+  demo:
+    enabled: ${DEMO_MODE:true}
+    menu-items-enabled: ${DEMO_MENU_ITEMS:true}
+    transactions-enabled: ${DEMO_TRANSACTIONS:true}
+    cost-savings-display: ${COST_SAVINGS_DISPLAY:true}
+    toast-comparison:
+      monthly-cost: 1661  # Toast monthly cost
+      annual-cost: 19932  # Toast annual cost
+      upp-monthly-cost: 1150  # UPP monthly cost
+      upp-annual-cost: 13800  # UPP annual cost
+      annual-savings: 6132  # Annual savings
+
+# Server configuration for production
+server:
+  port: ${SERVER_PORT:10000}  # Render uses PORT environment variable
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+  forward-headers-strategy: native
+  
+# CORS configuration for production domains
+cors:
+  allowed-origins: ${CORS_ALLOWED_ORIGINS:https://aliifishmarket.realconnect.online,https://realconnect.online,https://upp.realconnect.online}
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+  allowed-headers: "*"
+  allow-credentials: true
+  max-age: 3600
+
+# Production logging configuration
+logging:
+  level:
+    com.aliifishmarket: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
+    org.hibernate.type.descriptor.sql.BasicBinder: WARN
+    root: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# Management endpoints for production monitoring
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+  health:
+    db:
+      enabled: true
+
+# Security configuration
+security:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 86400000  # 24 hours
+  cors:
+    enabled: true

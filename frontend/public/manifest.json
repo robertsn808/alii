@@ -1,0 +1,79 @@
+{
+  "name": "Ali'i Fish Market Staff Terminal",
+  "short_name": "Ali'i Staff",
+  "description": "Mobile payment terminal for Ali'i Fish Market staff",
+  "start_url": "/staff",
+  "display": "standalone",
+  "background_color": "#0F172A",
+  "theme_color": "#0EA5E9",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512", 
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png", 
+      "purpose": "any"
+    }
+  ],
+  "categories": ["business", "finance", "food"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Quick Orders",
+      "short_name": "Quick Orders", 
+      "description": "Access pre-configured quick orders",
+      "url": "/staff?mode=quick",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "NFC Payment",
+      "short_name": "NFC Pay",
+      "description": "Process NFC payments",
+      "url": "/staff?mode=nfc", 
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "QR Payment",
+      "short_name": "QR Pay",
+      "description": "Generate QR codes for payment",
+      "url": "/staff?mode=qr",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png", 
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

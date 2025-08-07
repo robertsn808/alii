@@ -1,0 +1,20 @@
+#!/bin/sh
+# Maven Wrapper Script
+
+set -e
+
+MAVEN_PROJECTBASEDIR=${MAVEN_BASEDIR:-"$BASE_DIR"}
+MAVEN_OPTS="${MAVEN_OPTS:-}"
+MAVEN_DEBUG_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8000"
+
+if [ ! -d "$HOME/.m2/wrapper/dists" ]; then
+    mkdir -p "$HOME/.m2/wrapper/dists"
+fi
+
+# Use Maven from system if available, otherwise download
+if command -v mvn >/dev/null 2>&1; then
+    exec mvn "$@"
+else
+    echo "Maven not found. Please install Maven 3.6+ or use the system package manager."
+    exit 1
+fi

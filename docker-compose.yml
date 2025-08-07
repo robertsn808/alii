@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: alii-fish-market-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: alii_fish_market
+      POSTGRES_USER: alii_user
+      POSTGRES_PASSWORD: alii_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - alii-network
+
+  # Redis for caching and sessions
+  redis:
+    image: redis:7-alpine
+    container_name: alii-fish-market-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - alii-network
+
+  # Spring Boot Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: alii-fish-market-backend
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DATABASE_URL=jdbc:postgresql://postgres:5432/alii_fish_market
+      - DB_USERNAME=alii_user
+      - DB_PASSWORD=alii_password
+      - REDIS_URL=redis://redis:6379
+      - UPP_API_URL=${UPP_API_URL:-http://upp-service:3001}
+      - UPP_API_KEY=${UPP_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_PHONE_NUMBER=${TWILIO_PHONE_NUMBER}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - alii-network
+    volumes:
+      - backend_logs:/app/logs
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: alii-fish-market-frontend
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_API_URL=http://backend:8080/api
+      - NEXT_PUBLIC_UPP_API_URL=${UPP_API_URL:-http://upp-service:3001}
+      - NEXT_PUBLIC_SITE_URL=https://aliifishmarket.com
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - alii-network
+
+  # Universal Payment Protocol Service (Mock for development)
+  upp-service:
+    image: nginx:alpine
+    container_name: alii-upp-mock
+    restart: unless-stopped
+    volumes:
+      - ./upp-mock/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "3001:80"
+    networks:
+      - alii-network
+
+  # Nginx Reverse Proxy (Commented out for initial development)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: alii-nginx
+  #   restart: unless-stopped
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./nginx/ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - frontend
+  #     - backend
+  #     - upp-service
+  #   networks:
+  #     - alii-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  alii-network:
+    driver: bridge
