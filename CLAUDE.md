@@ -221,6 +221,7 @@ Replacing Alii Fish Market's current Toast POS system with a custom Universal Pa
 
 ## Claude Code Guidelines
 - Do not add your signature to any github messages like commits or pull requests
+- Do not add your signature to commits and pull requests
 
 ## MCP Integration Milestones
 

@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  # AI Error Monitoring System
+  error-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3030:3030"
+    environment:
+      - NODE_ENV=production
+      - PORT=3030
+    env_file:
+      - .env
+    volumes:
+      - ../backend/logs:/app/logs/backend:ro
+      - ../frontend/.next:/app/logs/frontend:ro
+      - /var/log:/app/logs/system:ro
+      - ./data:/app/data
+    depends_on:
+      - redis
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+    labels:
+      - "com.aliifishmarket.service=error-monitor"
+      - "com.aliifishmarket.description=AI-powered error monitoring and auto-fix system"
+
+  # Redis for caching and queuing
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # MongoDB for storing error data and analysis results
+  mongodb:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=aliierrormonitor
+      - MONGO_INITDB_DATABASE=alii_errors
+    volumes:
+      - mongodb-data:/data/db
+      - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # Elasticsearch for log aggregation and search
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # Kibana for log visualization
+  kibana:
+    image: kibana:8.11.0
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # Grafana for monitoring dashboard
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=alii_monitor_2024
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - error-monitor
+      - grafana
+      - kibana
+    restart: unless-stopped
+    networks:
+      - error-monitor-network
+
+volumes:
+  redis-data:
+    driver: local
+  mongodb-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+
+networks:
+  error-monitor-network:
+    driver: bridge
+    labels:
+      - "com.aliifishmarket.network=error-monitor"

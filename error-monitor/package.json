@@ -1,0 +1,38 @@
+{
+  "name": "alii-error-monitor",
+  "version": "1.0.0",
+  "description": "AI-powered error monitoring and auto-fix system for Alii Fish Market",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo 'Tests will be implemented'",
+    "setup": "./scripts/setup.sh",
+    "deploy": "./scripts/deploy.sh"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4",
+    "winston": "^3.11.0",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.7",
+    "@slack/web-api": "^6.10.0",
+    "openai": "^4.24.0",
+    "@anthropic-ai/sdk": "^0.9.1",
+    "@octokit/rest": "^20.0.2",
+    "simple-git": "^3.20.0",
+    "chokidar": "^3.5.3",
+    "joi": "^17.11.0",
+    "uuid": "^9.0.1",
+    "moment": "^2.29.4",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
