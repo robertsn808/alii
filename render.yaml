@@ -169,7 +169,11 @@ services:
     healthCheckPath: /health
 
 databases:
+  # PRODUCTION-READY: Basic PostgreSQL Database ($7/month)
+  # Features: 256MB RAM, 1GB storage, automated backups, no expiration
+  # Perfect for demo and early production use
   - name: alii-database
     databaseName: alii_fish_market
     user: alii_user
-    plan: free
+    plan: basic_256mb
+    ipAllowList: []  # Allow connections from anywhere (secure for Render services)
