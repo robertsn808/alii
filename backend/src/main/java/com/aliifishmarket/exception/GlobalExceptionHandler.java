@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.validation.BindException;
 import org.springframework.security.access.AccessDeniedException;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;

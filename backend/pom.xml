@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.0</version>
+        <version>3.3.8</version>
         <relativePath/>
     </parent>
     <groupId>com.aliifishmarket</groupId>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>com.theokanning.openai-gpt3-java</groupId>
             <artifactId>service</artifactId>
-            <version>0.18.0</version>
+            <version>0.18.2</version>
         </dependency>
         
         <!-- JSON Processing -->
@@ -72,19 +72,19 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
-            <version>1.10.0</version>
+            <version>1.12.0</version>
         </dependency>
         
         <!-- Excel Processing (adapted from Seller repo) -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.2.4</version>
+            <version>5.3.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.4</version>
+            <version>5.3.0</version>
         </dependency>
         
         <!-- HTTP Client for UPP integration -->

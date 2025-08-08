@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.scheduling.annotation.Async;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.aliifishmarket.config.ErrorMonitorConfig;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
