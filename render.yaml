@@ -172,4 +172,4 @@ databases:
   - name: alii-database
     databaseName: alii_fish_market
     user: alii_user
-    plan: starter
+    plan: free
