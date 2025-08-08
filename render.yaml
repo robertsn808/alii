@@ -169,7 +169,13 @@ services:
     healthCheckPath: /health
 
 databases:
+  # CHEAPEST OPTION: FREE PostgreSQL Database
+  # Limitations: 1GB storage, expires after 30 days, no backups
+  # For production after demo, upgrade to: basic_256mb ($7/month)
   - name: alii-database
     databaseName: alii_fish_market
     user: alii_user
     plan: free
+    # To upgrade after successful demo, change to:
+    # plan: basic_256mb  # $7/month - 256MB RAM, 1GB storage, with backups
+    # ipAllowList: []    # Optional: restrict access to specific IPs
