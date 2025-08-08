@@ -29,6 +29,19 @@ services:
         sync: false
       - key: NEXT_PUBLIC_UPP_MERCHANT_ID
         value: alii_fish_market_001
+      # Shared environment variables
+      - key: APP_NAME
+        value: "Alii Fish Market"
+      - key: APP_VERSION
+        value: "1.0.0"
+      - key: DEPLOYMENT_ENV
+        value: production
+      - key: TIME_ZONE
+        value: "Pacific/Honolulu"
+      - key: BUSINESS_PHONE
+        value: "+1-808-555-FISH"
+      - key: BUSINESS_ADDRESS
+        value: "123 Aloha Way, Honolulu, HI 96813"
     domains:
       - aliifishmarket.realconnect.online
     healthCheckPath: /api/health
@@ -72,6 +85,19 @@ services:
         generateValue: true
       - key: JWT_SECRET
         generateValue: true
+      # Shared environment variables
+      - key: APP_NAME
+        value: "Alii Fish Market"
+      - key: APP_VERSION
+        value: "1.0.0"
+      - key: DEPLOYMENT_ENV
+        value: production
+      - key: TIME_ZONE
+        value: "Pacific/Honolulu"
+      - key: BUSINESS_PHONE
+        value: "+1-808-555-FISH"
+      - key: BUSINESS_ADDRESS
+        value: "123 Aloha Way, Honolulu, HI 96813"
     domains:
       - alii-api.realconnect.online
     healthCheckPath: /actuator/health
@@ -125,28 +151,7 @@ services:
         generateValue: true
       - key: CORS_ALLOWED_ORIGINS
         value: https://aliifishmarket.realconnect.online,https://alii-api.realconnect.online
-    domains:
-      - monitor.realconnect.online
-    healthCheckPath: /health
-
-databases:
-  - name: alii-database
-    databaseName: alii_fish_market
-    user: alii_user
-    plan: starter
-
-# Static Assets (if needed)
-staticSites:
-  - name: alii-assets
-    buildCommand: echo "Static assets ready"
-    publishPath: frontend/public
-    domains:
-      - assets.aliifishmarket.realconnect.online
-
-# Environment Groups for shared configuration
-envGroups:
-  - name: alii-shared
-    envVars:
+      # Shared environment variables
       - key: APP_NAME
         value: "Alii Fish Market"
       - key: APP_VERSION
@@ -159,3 +164,12 @@ envGroups:
         value: "+1-808-555-FISH"
       - key: BUSINESS_ADDRESS
         value: "123 Aloha Way, Honolulu, HI 96813"
+    domains:
+      - monitor.realconnect.online
+    healthCheckPath: /health
+
+databases:
+  - name: alii-database
+    databaseName: alii_fish_market
+    user: alii_user
+    plan: starter
