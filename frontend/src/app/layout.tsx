@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
+import ErrorBoundary from '../components/ErrorBoundary'
+import { ErrorMonitoringProvider } from '../components/ErrorMonitoringProvider'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 const poppins = Poppins({ 
@@ -57,9 +59,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${poppins.variable}`}>
       <body className={inter.className}>
-        <div className="min-h-screen bg-gradient-to-br from-ocean-50 to-primary-50">
-          {children}
-        </div>
+        <ErrorMonitoringProvider>
+          <ErrorBoundary context="app_root">
+            <div className="min-h-screen bg-gradient-to-br from-ocean-50 to-primary-50">
+              {children}
+            </div>
+          </ErrorBoundary>
+        </ErrorMonitoringProvider>
       </body>
     </html>
   )

@@ -52,6 +52,9 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
+      - ERROR_MONITOR_ENABLED=true
+      - ERROR_MONITOR_ENDPOINT=http://error-monitor:4000
+      - ERROR_MONITOR_API_KEY=${ERROR_MONITOR_API_KEY}
     ports:
       - "8080:8080"
     depends_on:
@@ -74,6 +77,9 @@ services:
       - NEXT_PUBLIC_API_URL=http://backend:8080/api
       - NEXT_PUBLIC_UPP_API_URL=${UPP_API_URL:-http://upp-service:3001}
       - NEXT_PUBLIC_SITE_URL=https://aliifishmarket.com
+      - NEXT_PUBLIC_ERROR_MONITOR_ENABLED=true
+      - NEXT_PUBLIC_ERROR_MONITOR_ENDPOINT=http://error-monitor:4000
+      - NEXT_PUBLIC_ERROR_MONITOR_API_KEY=${ERROR_MONITOR_API_KEY}
     ports:
       - "3000:3000"
     depends_on:
@@ -92,6 +98,41 @@ services:
       - "3001:80"
     networks:
       - alii-network
+
+  # AI Error Monitoring System
+  error-monitor:
+    build:
+      context: ./error-monitor
+      dockerfile: Dockerfile
+    container_name: alii-error-monitor
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=4000
+      - DATABASE_URL=postgresql://alii_user:alii_password@postgres:5432/alii_fish_market
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - GITHUB_PERSONAL_ACCESS_TOKEN=${GITHUB_PERSONAL_ACCESS_TOKEN}
+      - GITHUB_OWNER=${GITHUB_OWNER}
+      - GITHUB_REPO=${GITHUB_REPO}
+      - BUSINESS_NAME=Alii Fish Market
+      - BUSINESS_CONTEXT=toast_pos_replacement
+      - ANNUAL_SAVINGS=6132
+      - TOAST_ANNUAL_COST=19932
+      - BUSINESS_HOURS=06:00-20:00
+      - TIMEZONE=Pacific/Honolulu
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
+      - EMAIL_SERVICE_API_KEY=${EMAIL_SERVICE_API_KEY}
+      - CORS_ALLOWED_ORIGINS=http://frontend:3000,http://backend:8080
+    ports:
+      - "4000:4000"
+    depends_on:
+      - postgres
+      - backend
+    networks:
+      - alii-network
+    volumes:
+      - error_monitor_logs:/app/logs
 
   # Nginx Reverse Proxy (Commented out for initial development)
   # nginx:
@@ -117,6 +158,8 @@ volumes:
   redis_data:
     driver: local
   backend_logs:
+    driver: local
+  error_monitor_logs:
     driver: local
 
 networks:

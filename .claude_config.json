@@ -1,0 +1,104 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/mnt/c/Users/rober/IdeaProjects/alii"],
+      "description": "Enhanced filesystem operations for the Alii project"
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "description": "Persistent memory for storing project context and development notes"
+    },
+    "git": {
+      "command": "uvx",
+      "args": ["mcp-server-git", "--repository", "/mnt/c/Users/rober/IdeaProjects/alii"],
+      "description": "Git repository management for Alii Fish Market project"
+    },
+    "sqlite": {
+      "command": "uvx",
+      "args": ["mcp-server-sqlite", "--db-path", "/mnt/c/Users/rober/IdeaProjects/alii/database/local.db"],
+      "description": "Local SQLite database for development and testing"
+    },
+    "postgres": {
+      "command": "postgres-mcp",
+      "args": [],
+      "env": {
+        "DB_MAIN_HOST": "localhost",
+        "DB_MAIN_PORT": "5432",
+        "DB_MAIN_NAME": "alii_db",
+        "DB_MAIN_USER": "postgres",
+        "DB_MAIN_PASSWORD": "password"
+      },
+      "description": "PostgreSQL database integration for Alii Fish Market orders, menu, and analytics"
+    },
+    "github": {
+      "command": "uvx",
+      "args": ["mcp-server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "description": "GitHub integration for repository management and issue tracking"
+    },
+    "fetch": {
+      "command": "python3",
+      "args": ["-m", "mcp_server_fetch"],
+      "description": "HTTP/REST API integration for UPP payments, Stripe, and external services"
+    },
+    "sequential-thinking": {
+      "command": "uvx",
+      "args": ["mcp-server-sequential-thinking"],
+      "description": "Enhanced reasoning capabilities for complex payment processing logic"
+    },
+    "brave-search": {
+      "command": "uvx",
+      "args": ["mcp-server-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      },
+      "description": "Web search for UPP documentation and payment processing research"
+    },
+    "time": {
+      "command": "uvx",
+      "args": ["mcp-server-time"],
+      "description": "Time and scheduling operations for business hours and order management"
+    }
+  },
+  "globalShortcuts": {
+    "quickCommit": "ctrl+shift+c",
+    "runTests": "ctrl+shift+t",
+    "deployDev": "ctrl+shift+d"
+  },
+  "projectSettings": {
+    "aliiProject": {
+      "name": "Alii Fish Market UPP System",
+      "description": "Universal Payment Protocol solution replacing Toast POS",
+      "environments": {
+        "development": {
+          "database": "postgresql://postgres:password@localhost:5432/alii_dev",
+          "baseUrl": "http://localhost:3000",
+          "uppApiUrl": "http://localhost:8080/mock-upp"
+        },
+        "production": {
+          "database": "${DATABASE_URL}",
+          "baseUrl": "https://aliifishmarket.onrender.com",
+          "uppApiUrl": "${UPP_API_ENDPOINT}"
+        }
+      },
+      "integrations": {
+        "stripe": {
+          "testMode": true,
+          "webhookUrl": "/api/stripe/webhook"
+        },
+        "twilio": {
+          "phoneNumber": "+1808XXX-XXXX",
+          "features": ["sms", "voice"]
+        },
+        "upp": {
+          "merchantId": "alii_fish_market_001",
+          "paymentMethods": ["nfc", "qr", "voice", "contactless", "manual"]
+        }
+      }
+    }
+  }
+}

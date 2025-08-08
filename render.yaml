@@ -1,44 +1,53 @@
-# Render.com Blueprint for Alii Fish Market UPP Prototype
-# Deploy to: aliifishmarket.realconnect.online
+# Render Docker Deployment for Complete Alii Fish Market System
+# Deploy to: realconnect.online ecosystem
 
 services:
-  # Frontend - React/Next.js Application
+  # Next.js Frontend - Docker Deployment
   - type: web
-    name: alii-frontend
-    runtime: node
-    plan: free
-    buildCommand: cd frontend && npm ci && npm run build
-    startCommand: cd frontend && npm start
+    name: alii-website
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    plan: starter
     envVars:
       - key: NODE_ENV
         value: production
       - key: NEXT_PUBLIC_API_URL
-        value: https://alii-api.realconnect.online
+        value: https://alii-api.realconnect.online/api
       - key: NEXT_PUBLIC_UPP_API_URL
         value: https://upp.realconnect.online
       - key: NEXT_PUBLIC_SELLER_API_URL
         value: https://realconnect.online
-      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-        sync: false
       - key: NEXT_PUBLIC_SITE_URL
         value: https://aliifishmarket.realconnect.online
+      - key: NEXT_PUBLIC_ERROR_MONITOR_ENABLED
+        value: true
+      - key: NEXT_PUBLIC_ERROR_MONITOR_ENDPOINT
+        value: https://monitor.realconnect.online
+      - key: NEXT_PUBLIC_ERROR_MONITOR_API_KEY
+        generateValue: true
+      - key: NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+        sync: false
+      - key: NEXT_PUBLIC_UPP_MERCHANT_ID
+        value: alii_fish_market_001
     domains:
       - aliifishmarket.realconnect.online
+    healthCheckPath: /api/health
     
-  # Backend API - Java Spring Boot
+  # Spring Boot Backend - Docker Deployment  
   - type: web
     name: alii-api
-    runtime: java
-    plan: free
-    buildCommand: cd backend && ./mvnw clean package -DskipTests
-    startCommand: cd backend && java -jar target/alii-fish-market-0.0.1-SNAPSHOT.jar
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    plan: starter
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: production
       - key: SERVER_PORT
         value: 10000
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: alii-database
+          property: connectionString
       - key: UPP_API_ENDPOINT
         value: https://upp.realconnect.online
       - key: UPP_MERCHANT_ID
@@ -55,21 +64,76 @@ services:
         value: +18085551234
       - key: CORS_ALLOWED_ORIGINS
         value: https://aliifishmarket.realconnect.online,https://realconnect.online
+      - key: ERROR_MONITOR_ENABLED
+        value: true
+      - key: ERROR_MONITOR_ENDPOINT
+        value: https://monitor.realconnect.online
+      - key: ERROR_MONITOR_API_KEY
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
     domains:
       - alii-api.realconnect.online
+    healthCheckPath: /actuator/health
 
-  # PostgreSQL Database
-  - type: pserv
-    name: alii-database
-    plan: free
-    region: oregon
-    property: postgresql
-    ipAllowList: []
+  # AI Error Monitor - Docker Deployment
+  - type: web
+    name: alii-error-monitor
+    env: docker
+    dockerfilePath: ./error-monitor/Dockerfile
+    plan: starter
     envVars:
-      - key: POSTGRES_DB
-        value: alii_fish_market
-      - key: POSTGRES_USER
-        value: alii_user
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: alii-database
+          property: connectionString
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: GITHUB_PERSONAL_ACCESS_TOKEN
+        sync: false
+      - key: GITHUB_OWNER
+        sync: false
+      - key: GITHUB_REPO
+        value: alii
+      - key: GITHUB_BRANCH
+        value: main
+      - key: BUSINESS_NAME
+        value: "Alii Fish Market"
+      - key: BUSINESS_CONTEXT
+        value: toast_pos_replacement
+      - key: ANNUAL_SAVINGS
+        value: 6132
+      - key: TOAST_ANNUAL_COST
+        value: 19932
+      - key: BUSINESS_HOURS
+        value: "06:00-20:00"
+      - key: TIMEZONE
+        value: "Pacific/Honolulu"
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+      - key: EMAIL_SERVICE_API_KEY
+        sync: false
+      - key: EMAIL_FROM
+        value: monitor@realconnect.online
+      - key: ERROR_MONITOR_API_KEY
+        generateValue: true
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://aliifishmarket.realconnect.online,https://alii-api.realconnect.online
+    domains:
+      - monitor.realconnect.online
+    healthCheckPath: /health
+
+databases:
+  - name: alii-database
+    databaseName: alii_fish_market
+    user: alii_user
+    plan: starter
 
 # Static Assets (if needed)
 staticSites:

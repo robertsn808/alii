@@ -85,6 +85,16 @@ app:
     tax-rate: 0.04712  # Hawaii general excise tax
     service-fee-rate: 0.025  # 2.5% service fee
 
+  # AI Error Monitoring Integration
+  error-monitor:
+    enabled: ${ERROR_MONITOR_ENABLED:true}
+    endpoint: ${ERROR_MONITOR_ENDPOINT:https://alii-error-monitor.onrender.com}
+    api-key: ${ERROR_MONITOR_API_KEY:}
+    report-async: true
+    report-payment-errors: true
+    report-database-errors: true
+    report-validation-errors: false
+
 # Server configuration  
 server:
   port: ${PORT:8080}
