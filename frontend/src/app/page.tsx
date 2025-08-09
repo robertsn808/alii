@@ -28,7 +28,7 @@ export default function HomePage() {
       id: '1',
       name: 'Ahi Poke Bowl',
       price: 16.95,
-      image: '/images/ahi-poke-bowl.jpg',
+      image: 'https://images.unsplash.com/photo-1562158070-1e0dba0f8a98?q=80&w=1200&auto=format&fit=crop',
       popular: true,
       description: 'Fresh ahi tuna with traditional Hawaiian seasoning'
     },
@@ -36,14 +36,14 @@ export default function HomePage() {
       id: '2', 
       name: 'Salmon Poke Bowl',
       price: 15.95,
-      image: '/images/salmon-poke-bowl.jpg',
+      image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?q=80&w=1200&auto=format&fit=crop',
       description: 'Wild-caught salmon with island-style marinade'
     },
     {
       id: '3',
       name: 'Fresh Ahi Steak (1lb)',
       price: 24.95,
-      image: '/images/fresh-ahi.jpg',
+      image: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop',
       popular: true,
       description: 'Sashimi-grade ahi tuna, perfect for grilling'
     }
@@ -52,7 +52,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Navigation Header */}
-      <header className="glass-effect sticky top-0 z-50 border-b border-primary-200/20">
+      <header className="glass-effect sticky top-0 z-50 border-b border-primary-200/20 bg-white">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -67,6 +67,12 @@ export default function HomePage() {
               </div>
             </div>
             
+            <nav className="hidden md:flex items-center space-x-6 text-ocean-700">
+              <Link href="/" className="hover:text-primary-600">Home</Link>
+              <Link href="/menu" className="hover:text-primary-600">Menu</Link>
+              <Link href="#contact" className="hover:text-primary-600">Contact</Link>
+              <Link href="#catering" className="hover:text-primary-600">Catering</Link>
+            </nav>
             <div className="flex items-center space-x-4">
               <div className="hidden md:flex items-center space-x-4 text-sm text-ocean-600">
                 <div className="flex items-center space-x-1">
@@ -92,9 +98,10 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 ocean-gradient">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute inset-0 bg-gradient-to-r from-primary-900/50 to-transparent"></div>
+      <section className="relative overflow-hidden py-24">
+        <div className="absolute inset-0">
+          <Image src="https://images.unsplash.com/photo-1617191518309-3ea1f9b9785f?q=80&w=1920&auto=format&fit=crop" alt="Ali'i Fish Market" fill priority className="object-cover" />
+          <div className="absolute inset-0 bg-ocean-900/50"></div>
         </div>
         
         <div className="container mx-auto px-4 relative z-10">
@@ -112,9 +119,11 @@ export default function HomePage() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up">
-              <Button size="lg" className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-8 py-4">
+              <Link href="/menu">
+                <Button size="lg" className="bg-white text-primary-600 hover:bg-primary-50 text-lg px-8 py-4">
                 Order Online Now
-              </Button>
+                </Button>
+              </Link>
               <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 text-lg px-8 py-4">
                 View Today's Fresh Catch
               </Button>
@@ -151,10 +160,8 @@ export default function HomePage() {
                 style={{animationDelay: `${index * 0.1}s`}}
               >
                 <div className="relative mb-4">
-                  <div className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 rounded-lg overflow-hidden">
-                    <div className="w-full h-full flex items-center justify-center text-primary-600">
-                      <Waves className="h-16 w-16 opacity-50" />
-                    </div>
+                  <div className="aspect-square rounded-lg overflow-hidden">
+                    <Image src={item.image} alt={item.name} width={600} height={600} className="w-full h-full object-cover" />
                   </div>
                   
                   {item.popular && (
