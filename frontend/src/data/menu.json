@@ -1,3 +1,112 @@
 {
-  "items": []
+  "items": [
+    {
+      "id": "build-your-own-bowl",
+      "name": "build your own bowl",
+      "description": "",
+      "price": 34,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "inari-poke-bombs",
+      "name": "INARI POKE BOMBS",
+      "description": "",
+      "price": 34,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "spicy-lomi-ahi-on-sushi-rice",
+      "name": "SPICY LOMI AHI ON SUSHI RICE",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "ahi-fish-patties",
+      "name": "AHI FISH PATTIES",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "spicy-garlic-dynamite-rice",
+      "name": "SPICY GARLIC DYNAMITE RICE",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "smoked-short-rib",
+      "name": "Smoked short rib",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "smoked",
+      "name": "Smoked",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "wfc",
+      "name": "WFC:",
+      "description": "",
+      "price": 85,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "alii-pies",
+      "name": "ALII PIES",
+      "description": "",
+      "price": 39,
+      "category": "menu",
+      "available": true,
+      "tags": [
+        "aliifishmarket.com"
+      ],
+      "preparationTime": 5
+    }
+  ]
 }

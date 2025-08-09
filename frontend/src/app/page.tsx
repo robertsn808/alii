@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { Button } from '@/components/ui/Button'
 import { ShoppingCart, Star, Clock, Phone, MapPin, Waves } from 'lucide-react'
 
@@ -186,9 +187,11 @@ export default function HomePage() {
           </div>
           
           <div className="text-center mt-12">
-            <Button size="lg" variant="outline">
-              View Full Menu
-            </Button>
+              <Link href="/menu">
+                <Button size="lg" variant="outline">
+                  View Full Menu
+                </Button>
+              </Link>
           </div>
         </div>
       </section>

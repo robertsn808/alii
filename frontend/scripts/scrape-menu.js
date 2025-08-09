@@ -129,30 +129,23 @@ function sectionizeByHeadings($) {
 async function parseAliiSite(html) {
   const $ = cheerio.load(html)
   const items = []
-  const sections = sectionizeByHeadings($)
-  for (const s of sections) {
-    const cat = s.title.toLowerCase()
-    // likely menu sections contain many images or list items
-    s.$container.find('img, li, p, h4, h5, strong').each((_, el) => {
-      const $el = $(el)
-      // try to detect item blocks
-      let name
-      if ($el.is('h4,h5,strong')) name = normalizeName($el.text())
-      if (!name && $el.is('li')) name = normalizeName($el.text())
-      if (name && name.length >= 2 && name.length <= 80) {
-        const price = parsePrice($el.text())
-        items.push({
-          id: slugify(name, { lower: true, strict: true }),
-          name,
-          description: '',
-          price: typeof price === 'number' ? price : undefined,
-          category: cat,
-          available: true,
-          tags: ['aliifishmarket.com']
-        })
-      }
+  // Squarespace markup: look for product grids and summaries
+  $('.sqs-block-content, .Products-list, .summary-item, .product-item, .summary-item-record-type-product').each((_, el) => {
+    const $el = $(el)
+    const name = normalizeName($el.find('h1,h2,h3,h4,h5,.product-title,.summary-title a').first().text())
+    const priceText = $el.find('.sqs-money-native, .product-price, .summary-price, .sqs-variant-price, .sqs-moneyline').first().text() || $el.text()
+    const price = parsePrice(priceText)
+    if (!name || !price) return
+    items.push({
+      id: slugify(name, { lower: true, strict: true }),
+      name,
+      description: '',
+      price,
+      category: 'menu',
+      available: true,
+      tags: ['aliifishmarket.com']
     })
-  }
+  })
   return items
 }
 
@@ -160,16 +153,16 @@ async function parseOrderExperience(html, baseUrl) {
   const $ = cheerio.load(html)
   const items = []
   // Heuristic 1: look for elements that contain a price and a nearby title and image
-  $('*:contains("$")').each((_, el) => {
+  $('[data-testid], article, section, li, div, .MuiCard-root, .MuiGrid-root').each((_, el) => {
     const $el = $(el)
     const text = normalizeName($el.text())
     const price = parsePrice(text)
     if (!price) return
-    // title: search within this container for bold headers
-    let title = $el.find('h1,h2,h3,h4,h5,strong,b').first().text().trim()
+    // title: search within this container for bold headers or aria-labels
+    let title = $el.attr('aria-label') || $el.find('h1,h2,h3,h4,h5,strong,b,[role=heading]').first().text().trim()
     if (!title) {
       const parts = text.split(/\n|\s{2,}/).map(t=>t.trim()).filter(Boolean)
-      title = parts.find(t => t && !/\$/.test(t) && t.length <= 80) || ''
+      title = parts.find(t => t && !/\$/.test(t) && t.length >= 3 && t.length <= 80) || ''
     }
     title = normalizeName(title)
     if (!title) return
