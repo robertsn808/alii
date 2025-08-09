@@ -1,0 +1,10 @@
+name,description,price,category,image_url,tags
+LIMU AHI,"Traditional Hawaiian poke with seaweed.",16.95,Poke,https://www.aliifishmarket.com/path/to/limu-ahi.jpg,ahi;poke
+WASABI GINGER A’U,"Wasabi-ginger marinated poke.",16.95,Poke,https://www.aliifishmarket.com/path/to/wasabi-ginger.jpg,ahi;poke;wasabi
+SPICY CREAMY GARLIC AHI,"Spicy creamy garlic sauce.",17.95,Poke,https://www.aliifishmarket.com/path/to/spicy-creamy-garlic.jpg,ahi;spicy
+GINGER AHI,"Fresh ginger dressing.",15.95,Poke,https://www.aliifishmarket.com/path/to/ginger-ahi.jpg,ahi
+SPICY HAWAIIAN,"Classic spicy Hawaiian style.",16.95,Poke,https://www.aliifishmarket.com/path/to/spicy-hawaiian.jpg,ahi;spicy
+INARI POKE BOMBS,"Inari filled with poke.",9.95,Specialties,https://www.aliifishmarket.com/path/to/inari-bombs.jpg,inari;poke
+Smoked short rib,"House smoked short rib.",19.95,Smoked Meats,https://www.aliifishmarket.com/path/to/smoked-short-rib.jpg,smoked;short-rib
+ALII PIES,"House-made pies.",6.95,Desserts,https://www.aliifishmarket.com/path/to/alii-pies.jpg,pie;dessert
+

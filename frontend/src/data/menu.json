@@ -1,110 +1,106 @@
 {
   "items": [
     {
-      "id": "build-your-own-bowl",
-      "name": "build your own bowl",
-      "description": "",
-      "price": 34,
-      "category": "menu",
+      "id": "limu-ahi",
+      "name": "LIMU AHI",
+      "description": "Traditional Hawaiian poke with seaweed.",
+      "price": 16.95,
+      "category": "Poke",
       "available": true,
       "tags": [
-        "aliifishmarket.com"
+        "ahi",
+        "poke"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "wasabi-ginger-au",
+      "name": "WASABI GINGER A’U",
+      "description": "Wasabi-ginger marinated poke.",
+      "price": 16.95,
+      "category": "Poke",
+      "available": true,
+      "tags": [
+        "ahi",
+        "poke",
+        "wasabi"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "spicy-creamy-garlic-ahi",
+      "name": "SPICY CREAMY GARLIC AHI",
+      "description": "Spicy creamy garlic sauce.",
+      "price": 17.95,
+      "category": "Poke",
+      "available": true,
+      "tags": [
+        "ahi",
+        "spicy"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "ginger-ahi",
+      "name": "GINGER AHI",
+      "description": "Fresh ginger dressing.",
+      "price": 15.95,
+      "category": "Poke",
+      "available": true,
+      "tags": [
+        "ahi"
+      ],
+      "preparationTime": 5
+    },
+    {
+      "id": "spicy-hawaiian",
+      "name": "SPICY HAWAIIAN",
+      "description": "Classic spicy Hawaiian style.",
+      "price": 16.95,
+      "category": "Poke",
+      "available": true,
+      "tags": [
+        "ahi",
+        "spicy"
       ],
       "preparationTime": 5
     },
     {
       "id": "inari-poke-bombs",
       "name": "INARI POKE BOMBS",
-      "description": "",
-      "price": 34,
-      "category": "menu",
+      "description": "Inari filled with poke.",
+      "price": 9.95,
+      "category": "Specialties",
       "available": true,
       "tags": [
-        "aliifishmarket.com"
-      ],
-      "preparationTime": 5
-    },
-    {
-      "id": "spicy-lomi-ahi-on-sushi-rice",
-      "name": "SPICY LOMI AHI ON SUSHI RICE",
-      "description": "",
-      "price": 85,
-      "category": "menu",
-      "available": true,
-      "tags": [
-        "aliifishmarket.com"
-      ],
-      "preparationTime": 5
-    },
-    {
-      "id": "ahi-fish-patties",
-      "name": "AHI FISH PATTIES",
-      "description": "",
-      "price": 85,
-      "category": "menu",
-      "available": true,
-      "tags": [
-        "aliifishmarket.com"
-      ],
-      "preparationTime": 5
-    },
-    {
-      "id": "spicy-garlic-dynamite-rice",
-      "name": "SPICY GARLIC DYNAMITE RICE",
-      "description": "",
-      "price": 85,
-      "category": "menu",
-      "available": true,
-      "tags": [
-        "aliifishmarket.com"
+        "inari",
+        "poke"
       ],
       "preparationTime": 5
     },
     {
       "id": "smoked-short-rib",
       "name": "Smoked short rib",
-      "description": "",
-      "price": 85,
-      "category": "menu",
+      "description": "House smoked short rib.",
+      "price": 19.95,
+      "category": "Smoked Meats",
       "available": true,
       "tags": [
-        "aliifishmarket.com"
-      ],
-      "preparationTime": 5
-    },
-    {
-      "id": "smoked",
-      "name": "Smoked",
-      "description": "",
-      "price": 85,
-      "category": "menu",
-      "available": true,
-      "tags": [
-        "aliifishmarket.com"
-      ],
-      "preparationTime": 5
-    },
-    {
-      "id": "wfc",
-      "name": "WFC:",
-      "description": "",
-      "price": 85,
-      "category": "menu",
-      "available": true,
-      "tags": [
-        "aliifishmarket.com"
+        "smoked",
+        "short-rib"
       ],
       "preparationTime": 5
     },
     {
       "id": "alii-pies",
       "name": "ALII PIES",
-      "description": "",
-      "price": 39,
-      "category": "menu",
+      "description": "House-made pies.",
+      "price": 6.95,
+      "category": "Desserts",
       "available": true,
       "tags": [
-        "aliifishmarket.com"
+        "pie",
+        "dessert"
       ],
       "preparationTime": 5
     }

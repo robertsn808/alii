@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "scrape:menu": "node scripts/scrape-menu.js"
+    "scrape:menu": "node scripts/scrape-menu.js",
+    "menu:import": "node scripts/import-menu-from-csv.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -39,9 +40,12 @@
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "cheerio": "^1.1.2",
+    "csv-parse": "^6.1.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.31",
     "puppeteer": "^24.16.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "slugify": "^1.6.6"
   }
 }
