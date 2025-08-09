@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Poppins } from 'next/font/google'
 import './globals.css'
 import ErrorBoundary from '../components/ErrorBoundary'
@@ -17,12 +17,12 @@ export const metadata: Metadata = {
   keywords: ['fish market', 'hawaii seafood', 'poke bowls', 'fresh fish', 'hawaiian food', 'alii fish market'],
   authors: [{ name: 'Ali\'i Fish Market' }],
   manifest: '/manifest.json',
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://aliifishmarket.com'),
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
     title: 'Ali\'i Fish Market'
   },
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
   openGraph: {
     title: 'Ali\'i Fish Market - Fresh Hawaiian Seafood',
     description: 'Hawaii\'s premier fish market offering the freshest daily catch, poke bowls, and authentic Hawaiian seafood.',
@@ -49,6 +49,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({

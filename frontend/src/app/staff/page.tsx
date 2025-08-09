@@ -7,5 +7,11 @@ export default function StaffPage() {
 export const metadata = {
   title: 'Staff Terminal - Ali\'i Fish Market',
   description: 'Mobile payment terminal for Ali\'i Fish Market staff',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0',
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 }
