@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "scrape:menu": "node scripts/scrape-menu.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.2",
@@ -19,7 +20,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
-    "axios": "^1.7.9",
+    "axios": "^1.11.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "date-fns": "^4.1.0",
@@ -37,7 +38,10 @@
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "cheerio": "^1.1.2",
     "eslint": "^8",
-    "eslint-config-next": "14.2.31"
+    "eslint-config-next": "14.2.31",
+    "puppeteer": "^24.16.0",
+    "slugify": "^1.6.6"
   }
 }
