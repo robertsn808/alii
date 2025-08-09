@@ -1,0 +1,85 @@
+version: 2
+updates:
+  # Frontend dependencies (npm)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "robertsn808"
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "frontend"
+      include: "scope"
+
+  # Error Monitor dependencies (npm)  
+  - package-ecosystem: "npm"
+    directory: "/error-monitor"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "robertsn808"
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "error-monitor"
+      include: "scope"
+
+  # Backend dependencies (maven)
+  - package-ecosystem: "maven"
+    directory: "/backend"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "robertsn808" 
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "backend"
+      include: "scope"
+
+  # Java Selenium Sample (maven)
+  - package-ecosystem: "maven"
+    directory: "/java-selenium-sample"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "robertsn808"
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "selenium"
+      include: "scope"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "robertsn808"
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "actions"
+      include: "scope"
+
+  # Docker
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "robertsn808"
+    assignees:
+      - "robertsn808"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
