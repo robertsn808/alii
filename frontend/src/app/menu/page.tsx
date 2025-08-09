@@ -1,19 +1,28 @@
-"use client"
-import { MenuGrid } from '@/components/menu/MenuGrid'
 import data from '@/data/menu.json'
 import { MenuItem } from '@/types'
+import MenuPageClient from './MenuPageClient'
+
+export const metadata = {
+  title: "Menu - Ali'i Fish Market",
+  description: 'Browse our full menu of poke, specialties, smoked meats, and desserts',
+  alternates: { canonical: '/menu' },
+  openGraph: {
+    title: "Menu - Ali'i Fish Market",
+    description: 'Full menu of poke, specialties, smoked meats, and desserts',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Menu - Ali'i Fish Market",
+    description: 'Full menu of poke, specialties, smoked meats, and desserts'
+  }
+}
+
+export const revalidate = 3600
 
 export default function MenuPage() {
   const items = (data.items as MenuItem[]) || []
-
-  const handleAddToCart = (_item: MenuItem, _quantity: number) => Promise.resolve()
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-display font-bold gradient-text mb-6">Our Menu</h1>
-      <MenuGrid items={items} onAddToCart={handleAddToCart} />
-    </div>
-  )
+  return <MenuPageClient items={items} />
 }
 
 
