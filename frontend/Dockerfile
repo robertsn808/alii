@@ -11,7 +11,8 @@ ARG APP_PATH=.
 
 # Install dependencies based on the preferred package manager
 COPY ${APP_PATH}/package.json ${APP_PATH}/package-lock.json* ./
-RUN npm ci --only=production
+# Install only production deps; requires lockfile to be in sync
+RUN npm ci --omit=dev --no-audit --no-fund
 
 # Rebuild the source code only when needed
 FROM base AS builder
