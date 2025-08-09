@@ -7,6 +7,7 @@ services:
     name: alii-website
     env: docker
     dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     plan: starter
     envVars:
       - key: NODE_ENV
@@ -51,6 +52,7 @@ services:
     name: alii-api
     env: docker
     dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     plan: starter
     envVars:
       - key: SPRING_PROFILES_ACTIVE
@@ -120,6 +122,7 @@ services:
     name: alii-error-monitor
     env: docker
     dockerfilePath: ./error-monitor/Dockerfile
+    dockerContext: ./error-monitor
     plan: starter
     envVars:
       - key: NODE_ENV
