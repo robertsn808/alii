@@ -1,0 +1,81 @@
+name: Dependency Update Check
+
+on:
+  schedule:
+    - cron: '0 8 * * MON'  # Run every Monday at 8 AM
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies  
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        project: [frontend, backend, error-monitor]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (for npm projects)
+        if: matrix.project != 'backend'
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: ${{ matrix.project }}/package-lock.json
+
+      - name: Setup Java (for backend)
+        if: matrix.project == 'backend'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Check for outdated npm packages
+        if: matrix.project != 'backend'
+        run: |
+          cd ${{ matrix.project }}
+          npm outdated || true
+          npm audit --audit-level=moderate || true
+
+      - name: Check for outdated Maven dependencies
+        if: matrix.project == 'backend'
+        run: |
+          cd ${{ matrix.project }}
+          ./mvnw versions:display-dependency-updates
+          ./mvnw versions:display-plugin-updates
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Frontend Security Audit
+        run: |
+          cd frontend
+          npm audit --audit-level=high
+
+      - name: Error Monitor Security Audit
+        run: |
+          cd error-monitor
+          npm audit --audit-level=high
+
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Backend Security Check
+        run: |
+          cd backend
+          # Check for known vulnerabilities in Maven dependencies
+          ./mvnw org.owasp:dependency-check-maven:check -Dformat=JSON || true
