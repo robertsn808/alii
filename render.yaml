@@ -175,5 +175,5 @@ databases:
   - name: alii-database
     databaseName: alii_fish_market
     user: alii_user
-    plan: basic_256mb
+    plan: free
     ipAllowList: []  # Allow connections from anywhere (secure for Render services)
