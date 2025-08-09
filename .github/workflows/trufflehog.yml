@@ -1,0 +1,47 @@
+name: Secret Scan (TruffleHog)
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  trufflehog-pr:
+    name: TruffleHog (PR diff)
+    if: github.event_name == 'pull_request' && github.event.pull_request.base.sha != github.event.pull_request.head.sha
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog on PR diff
+        uses: trufflesecurity/trufflehog@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+
+  trufflehog-push:
+    name: TruffleHog (push diff)
+    if: github.event_name == 'push' && github.event.before != github.sha
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog on push diff
+        uses: trufflesecurity/trufflehog@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          base: ${{ github.event.before }}
+          head: ${{ github.sha }}
+
+
