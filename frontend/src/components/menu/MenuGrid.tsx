@@ -10,14 +10,8 @@ interface MenuGridProps {
   onAddToCart: (item: MenuItem, quantity: number) => void
 }
 
-const categoryDisplayNames: Record<MenuCategory, string> = {
-  'poke-bowls': 'Poke Bowls',
-  'fresh-fish': 'Fresh Fish',
-  'prepared-foods': 'Prepared Foods',
-  'sides': 'Sides',
-  'beverages': 'Beverages',
-  'desserts': 'Desserts'
-}
+// With dynamic categories, use the raw category as display, title-cased
+const toTitle = (s: string) => s.replace(/[-_]/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 
 export function MenuGrid({ items, onAddToCart }: MenuGridProps) {
   const [searchTerm, setSearchTerm] = useState('')
@@ -113,7 +107,7 @@ export function MenuGrid({ items, onAddToCart }: MenuGridProps) {
               <option value="all">All Categories</option>
               {categories.map(category => (
                 <option key={category} value={category}>
-                  {categoryDisplayNames[category]}
+                  {toTitle(category)}
                 </option>
               ))}
             </select>
@@ -176,7 +170,7 @@ export function MenuGrid({ items, onAddToCart }: MenuGridProps) {
             {/* Category Header */}
             <div className="text-center">
               <h2 className="text-3xl font-display font-bold gradient-text mb-2">
-                {categoryDisplayNames[category as MenuCategory]}
+                {toTitle(category)}
               </h2>
               <div className="w-24 h-1 ocean-gradient mx-auto rounded-full"></div>
             </div>

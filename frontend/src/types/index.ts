@@ -21,13 +21,8 @@ export interface MenuItem {
   tags?: string[]
 }
 
-export type MenuCategory = 
-  | 'poke-bowls'
-  | 'fresh-fish'
-  | 'prepared-foods'
-  | 'sides'
-  | 'beverages'
-  | 'desserts'
+// Allow dynamic categories from external sources
+export type MenuCategory = string
 
 export interface CartItem {
   menuItem: MenuItem
