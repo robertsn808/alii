@@ -1,0 +1,99 @@
+# New Relic Java Agent Configuration File
+
+common: &default_settings
+  # New Relic UI name of application
+  app_name: ${NEW_RELIC_APP_NAME:Alii Fish Market Backend}
+  
+  # Set to true to enable New Relic monitoring
+  enabled: ${NEW_RELIC_ENABLED:true}
+  
+  # Your New Relic license key
+  license_key: ${NEW_RELIC_LICENSE_KEY:}
+  
+  # Logging level for New Relic agent
+  log_level: ${NEW_RELIC_LOG_LEVEL:info}
+  
+  # Audit mode for debugging (logs all data sent to New Relic)
+  audit_mode: ${NEW_RELIC_AUDIT_MODE:false}
+  
+  # High security mode
+  high_security: ${NEW_RELIC_HIGH_SECURITY:false}
+  
+  # Thread profiler settings
+  thread_profiler:
+    enabled: ${NEW_RELIC_THREAD_PROFILER:true}
+  
+  # Transaction tracer
+  transaction_tracer:
+    enabled: ${NEW_RELIC_TRANSACTION_TRACER:true}
+    threshold: ${NEW_RELIC_TRANSACTION_THRESHOLD:apdex_f}
+    record_sql: ${NEW_RELIC_RECORD_SQL:obfuscated}
+    explain_enabled: ${NEW_RELIC_EXPLAIN_ENABLED:true}
+    explain_threshold: ${NEW_RELIC_EXPLAIN_THRESHOLD:500}
+    stack_trace_threshold: ${NEW_RELIC_STACK_TRACE_THRESHOLD:500}
+  
+  # Error collector
+  error_collector:
+    enabled: ${NEW_RELIC_ERROR_COLLECTOR:true}
+    record_database_errors: ${NEW_RELIC_RECORD_DB_ERRORS:true}
+    prioritize_api_errors: ${NEW_RELIC_PRIORITIZE_API_ERRORS:true}
+    ignore_errors: 'java.io.EOFException,java.lang.StringIndexOutOfBoundsException'
+    ignore_status_codes: '404,401,403'
+  
+  # Browser monitoring
+  browser_monitoring:
+    auto_instrument: ${NEW_RELIC_BROWSER_AUTO:false}
+  
+  # Application performance monitoring
+  application_performance_monitoring:
+    enabled: ${NEW_RELIC_APM_ENABLED:true}
+  
+  # Cross application tracing
+  cross_application_tracer:
+    enabled: ${NEW_RELIC_CAT_ENABLED:true}
+  
+  # Distributed tracing
+  distributed_tracing:
+    enabled: ${NEW_RELIC_DT_ENABLED:true}
+  
+  # Attributes
+  attributes:
+    enabled: ${NEW_RELIC_ATTRIBUTES:true}
+    include: 'request.parameters.*, user.id, transaction.name'
+    exclude: 'request.parameters.password, request.parameters.credit_card'
+
+# Environment-specific settings
+development:
+  <<: *default_settings
+  app_name: 'Alii Fish Market Backend (Development)'
+  
+test:
+  <<: *default_settings
+  app_name: 'Alii Fish Market Backend (Test)'
+  enabled: false
+  
+staging:
+  <<: *default_settings
+  app_name: 'Alii Fish Market Backend (Staging)'
+  
+production:
+  <<: *default_settings
+  app_name: 'Alii Fish Market Backend'
+  # Enhanced settings for production
+  thread_profiler:
+    enabled: true
+  transaction_tracer:
+    enabled: true
+    threshold: 'apdex_f'
+    record_sql: 'obfuscated'
+    explain_enabled: true
+    explain_threshold: 500
+    stack_trace_threshold: 500
+  error_collector:
+    enabled: true
+    record_database_errors: true
+    prioritize_api_errors: true
+  distributed_tracing:
+    enabled: true
+  attributes:
+    enabled: true

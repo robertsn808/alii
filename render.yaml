@@ -85,6 +85,19 @@ services:
         generateValue: true
       - key: JWT_SECRET
         generateValue: true
+      # New Relic monitoring
+      - key: NEW_RELIC_ENABLED
+        value: true
+      - key: NEW_RELIC_LICENSE_KEY
+        sync: false
+      - key: NEW_RELIC_APP_NAME
+        value: "Alii Fish Market Backend"
+      - key: NEW_RELIC_LOG_LEVEL
+        value: info
+      - key: NEW_RELIC_HIGH_SECURITY
+        value: false
+      - key: NEW_RELIC_AUDIT_MODE
+        value: false
       # Shared environment variables
       - key: APP_NAME
         value: "Alii Fish Market"
@@ -151,6 +164,17 @@ services:
         generateValue: true
       - key: CORS_ALLOWED_ORIGINS
         value: https://aliifishmarket.realconnect.online,https://alii-api.realconnect.online
+      # New Relic monitoring for Node.js
+      - key: NEW_RELIC_ENABLED
+        value: true
+      - key: NEW_RELIC_LICENSE_KEY
+        sync: false
+      - key: NEW_RELIC_APP_NAME
+        value: "Alii Fish Market Error Monitor"
+      - key: NEW_RELIC_LOG_LEVEL
+        value: info
+      - key: NEW_RELIC_NO_CONFIG_FILE
+        value: true
       # Shared environment variables
       - key: APP_NAME
         value: "Alii Fish Market"

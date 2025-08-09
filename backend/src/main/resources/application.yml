@@ -94,6 +94,14 @@ app:
     report-payment-errors: true
     report-database-errors: true
     report-validation-errors: false
+  
+  # New Relic monitoring
+  newrelic:
+    enabled: ${NEW_RELIC_ENABLED:true}
+    app-name: ${NEW_RELIC_APP_NAME:Alii Fish Market Backend}
+    license-key: ${NEW_RELIC_LICENSE_KEY:}
+    log-level: ${NEW_RELIC_LOG_LEVEL:info}
+    audit-mode: ${NEW_RELIC_AUDIT_MODE:false}
 
 # Server configuration  
 server:

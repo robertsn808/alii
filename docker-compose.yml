@@ -55,6 +55,10 @@ services:
       - ERROR_MONITOR_ENABLED=true
       - ERROR_MONITOR_ENDPOINT=http://error-monitor:4000
       - ERROR_MONITOR_API_KEY=${ERROR_MONITOR_API_KEY}
+      - NEW_RELIC_ENABLED=${NEW_RELIC_ENABLED:-true}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME:-Alii Fish Market Backend}
+      - NEW_RELIC_LOG_LEVEL=${NEW_RELIC_LOG_LEVEL:-info}
     ports:
       - "8080:8080"
     depends_on:
