@@ -101,7 +101,7 @@ export function MenuCard({ item, onAddToCart }: MenuCardProps) {
             {item.name}
           </h3>
           <span className="text-2xl font-bold text-primary-600 ml-2">
-            ${item.price.toFixed(2)}
+            {item.price && item.price > 0 ? `$${item.price.toFixed(2)}` : 'Market'}
           </span>
         </div>
 
