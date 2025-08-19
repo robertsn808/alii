@@ -17,7 +17,7 @@
     "axios": "^1.7.9",
     "dotenv": "^16.6.1",
     "node-cron": "^3.0.3",
-    "nodemailer": "^6.10.1",
+    "nodemailer": "^7.0.5",
     "@slack/web-api": "^7.9.3",
     "openai": "^4.104.0",
     "@anthropic-ai/sdk": "^0.60.0",
