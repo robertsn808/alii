@@ -1,0 +1,47 @@
+services:
+  - type: web
+    name: n8n
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_TYPE
+        value: postgresdb
+      - key: DB_POSTGRESDB_HOST
+        fromDatabase:
+          name: n8n-postgres
+          property: host
+      - key: DB_POSTGRESDB_PORT
+        fromDatabase:
+          name: n8n-postgres
+          property: port
+      - key: DB_POSTGRESDB_DATABASE
+        fromDatabase:
+          name: n8n-postgres
+          property: database
+      - key: DB_POSTGRESDB_USER
+        fromDatabase:
+          name: n8n-postgres
+          property: user
+      - key: DB_POSTGRESDB_PASSWORD
+        fromDatabase:
+          name: n8n-postgres
+          property: password
+      - key: N8N_HOST
+        value: n8n.realconnect.online
+      - key: WEBHOOK_URL
+        value: https://n8n.realconnect.online/
+      - key: N8N_BASIC_AUTH_ACTIVE
+        value: true
+      - key: N8N_BASIC_AUTH_USER
+        value: admin
+      - key: N8N_BASIC_AUTH_PASSWORD
+        generateValue: true
+      - key: N8N_DIAGNOSTICS_ENABLED
+        value: false
+      - key: N8N_VERSION_NOTIFICATIONS_ENABLED
+        value: false
+
+databases:
+  - name: n8n-postgres
+    databaseName: n8n
+    user: n8n

@@ -1,0 +1,281 @@
+{
+  "name": "NiuByTalls Video Ad Generator (MCP-first)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ManualTrigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-820, -20]
+    },
+    {
+      "parameters": {
+        "url": "https://www.niubytalls.com/",
+        "responseFormat": "string",
+        "options": {
+          "followRedirect": true,
+          "timeout": 30000,
+          "headerParametersJson": "{}"
+        }
+      },
+      "id": "FetchSiteHTML",
+      "name": "Fetch Site HTML",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [-580, -20]
+    },
+    {
+      "parameters": {
+        "download": false,
+        "html": "={{$json[\"body\"]}}",
+        "extractionValues": {
+          "values": [
+            {"key": "title", "cssSelector": "title", "returnArray": false},
+            {"key": "headings", "cssSelector": "h1, h2, h3", "returnArray": true},
+            {"key": "paragraphs", "cssSelector": "p", "returnArray": true},
+            {"key": "links", "cssSelector": "a", "returnArray": true},
+            {"key": "meta", "cssSelector": "meta[name=description]", "returnArray": true}
+          ]
+        }
+      },
+      "id": "ExtractContent",
+      "name": "Extract Content",
+      "type": "n8n-nodes-base.htmlExtract",
+      "typeVersion": 1,
+      "position": [-340, -20]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Build a compact brand brief from extracted HTML\\nconst headings = ($json.headings || []).map(h=>h.text || h).slice(0, 15);\\nconst paragraphs = ($json.paragraphs || []).map(p=>p.text || p).slice(0, 40);\\nconst meta = ($json.meta || []).map(m=>m.attribs && m.attribs.content ? m.attribs.content : (m.content || \\"\\" )).filter(Boolean).slice(0,2);\\nconst title = $json.title || '';\\nreturn [{ brandBrief: { sourceUrl: 'https://www.niubytalls.com/', title, meta, topHeadings: headings, keyParagraphs: paragraphs } }];"
+      },
+      "id": "BuildBrandBrief",
+      "name": "Build Brand Brief",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [-120, -20]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.MCP_BRIDGE_URL || 'https://mcp-bridge.example/tools/run'}}",
+        "options": { "timeout": 60000, "sendBody": true },
+        "sendBody": true,
+        "jsonParameters": true,
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth",
+        "queryParametersJson": "{}",
+        "headerParametersJson": "={JSON.stringify({ 'Content-Type': 'application/json'})}",
+        "bodyParametersJson": "={{ JSON.stringify({ tool: 'summarize_brand_brief', input: { brandBrief: $json.brandBrief, style: 'modern, relatable, Gen Z + Millennial friendly', output: 'key value propositions, tone, hooks, target audience' } }) }}"
+      },
+      "id": "MCP_SummarizeBrief",
+      "name": "MCP: Summarize Brief",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "notes": "Calls an MCP bridge (HTTP) to run a summarizer tool. Configure MCP_BRIDGE_URL & Basic Auth.",
+      "position": [120, -20]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.MCP_BRIDGE_URL || 'https://mcp-bridge.example/tools/run'}}",
+        "options": { "timeout": 90000, "sendBody": true },
+        "sendBody": true,
+        "jsonParameters": true,
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth",
+        "headerParametersJson": "={JSON.stringify({ 'Content-Type': 'application/json'})}",
+        "bodyParametersJson": "={{ JSON.stringify({ tool: 'ad_script_writer', input: { brief: $json, durationSecondsRange: [15, 37], include: ['3 hook options','CTA','on-screen captions','shot list (beats)','narration script'], platform: ['TikTok','Reels','YouTube Shorts','Stories'] } }) }}"
+      },
+      "id": "MCP_ScriptWriter",
+      "name": "MCP: Write Script",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "notes": "MCP tool should return { script, captionsSRT, shotList, durationSeconds }",
+      "position": [360, -20]
+    },
+    {
+      "parameters": {
+        "resource": "speech",
+        "operation": "textToSpeech",
+        "voiceId": "={{$env.ELEVEN_VOICE_ID || 'Rachel'}}",
+        "text": "={{$json.script && $json.script.narration ? $json.script.narration : 'Narration missing'}}",
+        "stability": 0.5,
+        "similarityBoost": 0.75,
+        "optimizeStreamingLatency": 3,
+        "outputFormat": "mp3"
+      },
+      "id": "Narration_TTS",
+      "name": "ElevenLabs: TTS Narration",
+      "type": "n8n-nodes-base.elevenLabs",
+      "typeVersion": 1,
+      "notes": "Provide ElevenLabs credentials in n8n. Voice ID via env.",
+      "position": [600, -20]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.MCP_BRIDGE_URL || 'https://mcp-bridge.example/tools/run'}}",
+        "options": { "timeout": 120000, "sendBody": true },
+        "sendBody": true,
+        "jsonParameters": true,
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth",
+        "headerParametersJson": "={JSON.stringify({ 'Content-Type': 'application/json'})}",
+        "bodyParametersJson": "={{ JSON.stringify({ tool: 'video_generate', input: { provider: $env.VIDEO_PROVIDER || 'runway', script: $json.script, shotList: $json.shotList, durationSeconds: ($json.durationSeconds || 30), aspectRatio: '9:16', audioGuide: 'use narration timing if supported' } }) }}"
+      },
+      "id": "MCP_VideoGen",
+      "name": "MCP: Generate Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "notes": "Tool should return { jobId } and later { status, downloadUrl }",
+      "position": [840, -20]
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{ jobId: $json.jobId || $json.data && $json.data.jobId }];"
+      },
+      "id": "NormalizeJobId",
+      "name": "Normalize Job Id",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [1040, -20]
+    },
+    {
+      "parameters": { "interval": 10 },
+      "id": "Wait10s",
+      "name": "Wait 10s",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1240, -20]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.MCP_BRIDGE_URL || 'https://mcp-bridge.example/tools/run'}}",
+        "options": { "timeout": 60000, "sendBody": true },
+        "sendBody": true,
+        "jsonParameters": true,
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "httpBasicAuth",
+        "headerParametersJson": "={JSON.stringify({ 'Content-Type': 'application/json'})}",
+        "bodyParametersJson": "={{ JSON.stringify({ tool: 'video_generate_status', input: { jobId: $json.jobId } }) }}"
+      },
+      "id": "PollVideoJob",
+      "name": "MCP: Poll Video Job",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1440, -20]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [{ "value1": "={{$json.status}}", "operation": "equal", "value2": "complete" }]
+        }
+      },
+      "id": "IfComplete",
+      "name": "IF complete?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1640, -20]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.downloadUrl}}",
+        "responseFormat": "file",
+        "options": { "timeout": 120000 }
+      },
+      "id": "DownloadVideo",
+      "name": "Download Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1840, -120]
+    },
+    {
+      "parameters": {
+        "functionCode": "function toSrt(script) { const lines=(script||'').split(/\\n+/).filter(Boolean); const cps=15; let t=0, idx=1; const pad=s=>String(s).padStart(2,'0'); function fmt(ms){ const h=Math.floor(ms/3600000); ms-=h*3600000; const m=Math.floor(ms/60000); ms-=m*60000; const s=Math.floor(ms/1000); const msr=ms- s*1000; return `${pad(h)}:${pad(m)}:${pad(s)},${String(msr).padStart(3,'0')}`;} const entries=[]; for (const l of lines){ const dur=Math.max(1000, Math.min(4000, Math.ceil((l.length/cps)*1000))); entries.push(`${idx++}\\n${fmt(t)} --> ${fmt(t+dur)}\\n${l}\\n`); t+=dur+250;} return entries.join('\\n'); } const srt=$json.captionsSRT || toSrt($json.script && $json.script.captions || $json.script && $json.script.narration || ''); return [{ srt }];"
+      },
+      "id": "GenerateSRT",
+      "name": "Generate SRT (fallback)",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [1840, 80]
+    },
+    {
+      "parameters": {
+        "fileName": "=/home/node/.n8n/captions.srt",
+        "fileContent": "={{$json.srt}}"
+      },
+      "id": "WriteSRT",
+      "name": "Write SRT to File",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [2040, 80]
+    },
+    {
+      "parameters": {
+        "command": "ffmpeg",
+        "commandOptions": "-i input.mp4 -i captions.srt -c copy -c:s mov_text -metadata:s:s:0 language=eng output_with_subs.mp4",
+        "binaryPropertyName": "data"
+      },
+      "id": "FFmpegBurnSubtitles",
+      "name": "FFmpeg: Burn Subtitles",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "notes": "Requires FFmpeg available in n8n container/host. Place video as input.mp4 and captions.srt in working dir.",
+      "position": [2240, -20]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "binaryData": true,
+        "fileName": "={{$now.format('YYYYMMDD_HHmmss')}}_niu_ad.mp4",
+        "options": { "parents": "={{$env.GDRIVE_FOLDER_ID}}" }
+      },
+      "id": "UploadGoogleDrive",
+      "name": "Google Drive: Upload Final",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 2,
+      "position": [2440, -20]
+    },
+    {
+      "parameters": {
+        "workflowId": "={{$workflow.id}}",
+        "runData": "={{ { status: $json.status, jobId: $json.jobId, downloadUrl: $json.downloadUrl } }}"
+      },
+      "id": "LoopPoll",
+      "name": "Loop: Poll Again",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "notes": "Use connection back to Wait10s to loop until complete.",
+      "position": [1640, 160]
+    }
+  ],
+  "connections": {
+    "Fetch Site HTML": { "main": [[{ "node": "Extract Content", "type": "main", "index": 0 }]] },
+    "Manual Trigger": { "main": [[{ "node": "Fetch Site HTML", "type": "main", "index": 0 }]] },
+    "Extract Content": { "main": [[{ "node": "Build Brand Brief", "type": "main", "index": 0 }]] },
+    "Build Brand Brief": { "main": [[{ "node": "MCP: Summarize Brief", "type": "main", "index": 0 }]] },
+    "MCP: Summarize Brief": { "main": [[{ "node": "MCP: Write Script", "type": "main", "index": 0 }]] },
+    "MCP: Write Script": { "main": [[
+      { "node": "ElevenLabs: TTS Narration", "type": "main", "index": 0 },
+      { "node": "MCP: Generate Video", "type": "main", "index": 0 },
+      { "node": "Generate SRT (fallback)", "type": "main", "index": 0 }
+    ]]},
+    "MCP: Generate Video": { "main": [[{ "node": "Normalize Job Id", "type": "main", "index": 0 }]] },
+    "Normalize Job Id": { "main": [[{ "node": "Wait 10s", "type": "main", "index": 0 }]] },
+    "Wait 10s": { "main": [[{ "node": "MCP: Poll Video Job", "type": "main", "index": 0 }]] },
+    "MCP: Poll Video Job": { "main": [[{ "node": "IF complete?", "type": "main", "index": 0 }]] },
+    "IF complete?": {
+      "main": [
+        [{ "node": "Download Video", "type": "main", "index": 0 }],
+        [{ "node": "Loop: Poll Again", "type": "main", "index": 0 }]
+      ]
+    },
+    "Loop: Poll Again": { "main": [[{ "node": "Wait 10s", "type": "main", "index": 0 }]] },
+    "Generate SRT (fallback)": { "main": [[{ "node": "Write SRT to File", "type": "main", "index": 0 }]] },
+    "Download Video": { "main": [[{ "node": "FFmpeg: Burn Subtitles", "type": "main", "index": 0 }]] },
+    "Write SRT to File": { "main": [[{ "node": "FFmpeg: Burn Subtitles", "type": "main", "index": 1 }]] },
+    "FFmpeg: Burn Subtitles": { "main": [[{ "node": "Google Drive: Upload Final", "type": "main", "index": 0 }]] }
+  },
+  "meta": {
+    "version": "1.0.0",
+    "notes": "MCP-first video ad generator for NiuByTalls. Configure credentials & env: MCP_BRIDGE_URL, ELEVEN_VOICE_ID, VIDEO_PROVIDER, GDRIVE_FOLDER_ID."
+  }
+}

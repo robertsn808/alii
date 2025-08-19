@@ -4,9 +4,9 @@ spring:
   
   # Database configuration
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/alii_fish_market}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/alii_fish_market_db}
     username: ${DB_USERNAME:alii_user}
-    password: ${DB_PASSWORD:alii_password}
+    password: ${DB_PASSWORD:alii_password123}
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 20
@@ -57,9 +57,9 @@ app:
   
   # UPP Integration
   upp:
-    api-url: ${UPP_API_URL:http://localhost:3001}
-    api-key: ${UPP_API_KEY:}
-    webhook-secret: ${UPP_WEBHOOK_SECRET:}
+    api-url: ${UPP_API_URL:http://localhost:9000/api}
+    api-key: ${UPP_API_KEY:dev-api-key-alii-fish-market}
+    webhook-secret: ${UPP_WEBHOOK_SECRET:58b61457fe81c679dfa104036a7c7a0ab6985d266c4fe31ce5d35901ca61e268}
   
   # Twilio for SMS notifications
   twilio:

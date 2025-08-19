@@ -94,4 +94,9 @@ application-*.yml
 # Temporary files
 tmp/
 temp/
-.claude/
+.claude/n8n/n8n/data/postgres/
+*.log
+node_modules/
+target/
+dist/
+.env*
