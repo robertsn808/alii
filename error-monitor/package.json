@@ -19,7 +19,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.10.1",
     "@slack/web-api": "^7.9.3",
-    "openai": "^4.104.0",
+    "openai": "^5.13.1",
     "@anthropic-ai/sdk": "^0.60.0",
     "@octokit/rest": "^22.0.0",
     "simple-git": "^3.28.0",
