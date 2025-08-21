@@ -43,7 +43,7 @@
     "csv-parse": "^6.1.0",
     "eslint": "^8.57.1",
     "eslint-config-next": "^15.4.6",
-    "puppeteer": "^24.16.0",
+    "puppeteer": "^24.17.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "slugify": "^1.6.6"
